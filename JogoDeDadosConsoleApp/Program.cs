@@ -4,26 +4,46 @@
     internal class Program
     {
         /*
-         Versão 1 - Estrutura básica e simulação de dados 
-            Requisitos:
-
-            Exibir um banner para o jogo de dados
-            Implementar a geração de números aleatórios para simular um dado (1-6)
-            Exibir o resultado do lançamento do dado
-            Permitir que o usuário pressione Enter para lançar o dado
+         Versão 2 - Controle da posição do jogador 
+            Armazenar a posição do jogador na pista e atualizar o valor após o lançamento do dado
+            Exibir a posição atual do jogador na pista
+            Definir a linha de chegada em 30 verificar se o jogador alcançou ou ultrapassou a linha de chegada
+            Permitir o jogador realizar várias jogadas
          */
         static void Main(string[] args)
         {
+            const int limiteLinhaChegada = 30;
+
             while (true)
             {
+                int posicaoUsuario = 0;
+                bool jogoEstaEmAndamento = true;
+
+                while(jogoEstaEmAndamento)
+                {
+
                 ExibirCabecalho();
 
                 int resultado = LacarDados();
 
                 ExibirResultadoSorteio(resultado);
 
+                posicaoUsuario += resultado;
+
+                if (posicaoUsuario >= limiteLinhaChegada)
+                    {
+                    Console.WriteLine("Parabéns, você alcançou a linha de chegada!");
+                        jogoEstaEmAndamento = false;
+                    }
+                else
+                    Console.WriteLine($"Ojogador está na posição: {posicaoUsuario} de {limiteLinhaChegada}");
+
+                    Console.Write("Pressione ENTER para continuar");
+                    Console.ReadLine();
+                }
+
                 string opcaoContinuar = ExibirMenuContinuar();
-               
+
                 if (opcaoContinuar != "S")
                     break;
             }
