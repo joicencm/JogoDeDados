@@ -4,11 +4,12 @@
     internal class Program
     {
         /*
-         Versão 2 - Controle da posição do jogador 
-            Armazenar a posição do jogador na pista e atualizar o valor após o lançamento do dado
-            Exibir a posição atual do jogador na pista
-            Definir a linha de chegada em 30 verificar se o jogador alcançou ou ultrapassou a linha de chegada
-            Permitir o jogador realizar várias jogadas
+        Desafio Eventos Especiais:
+            Para tornar o jogo mais interessante, algumas posições na pista podem ter eventos especiais:
+            ○ Avanço extra: Se o competidor parar em uma posição específica (ex.: 5, 10, 15), ele avança +3
+            casas.
+            ○ Recuo: Se o competidor parar em outra posição específica (ex.: 7, 13, 20), ele recua -2 casas.
+            ○ Rodada extra: Se o competidor tirar 6 no dado, ele ganha uma rodada extra.
          */
         static void Main(string[] args)
         {
@@ -17,26 +18,58 @@
             while (true)
             {
                 int posicaoUsuario = 0;
+                int posicaoComputador = 0;
+
                 bool jogoEstaEmAndamento = true;
 
-                while(jogoEstaEmAndamento)
+                while (jogoEstaEmAndamento)
                 {
+                    //Turno do Usuario
+                    ExibirCabecalho("Usuario");
 
-                ExibirCabecalho();
+                    int resultado = LacarDados();
 
-                int resultado = LacarDados();
+                    ExibirResultadoSorteio(resultado);
 
-                ExibirResultadoSorteio(resultado);
+                    int posicaoAnteriorUsuario = posicaoUsuario;
+                    posicaoUsuario += resultado;
 
-                posicaoUsuario += resultado;
+                    posicaoUsuario = VerificarEventosEspeciais(ref posicaoUsuario, resultado, "Usuario");
 
-                if (posicaoUsuario >= limiteLinhaChegada)
+                    if (posicaoUsuario >= limiteLinhaChegada)
                     {
-                    Console.WriteLine("Parabéns, você alcançou a linha de chegada!");
+                        Console.WriteLine("Parabéns, você alcançou a linha de chegada!");
+                        Console.ReadLine();
                         jogoEstaEmAndamento = false;
+                        continue;
                     }
-                else
-                    Console.WriteLine($"Ojogador está na posição: {posicaoUsuario} de {limiteLinhaChegada}");
+                    else
+                        Console.WriteLine($"O jogador estava na posição: {posicaoAnteriorUsuario} e foi para a: {posicaoUsuario} de {limiteLinhaChegada}");
+
+                    Console.Write("Pressione ENTER para continuar");
+                    Console.ReadLine();
+
+                    //Turno do Computador
+                    ExibirCabecalho("Computador");
+
+                    int resultadoDoComputador = LacarDados();
+
+                    ExibirResultadoSorteio(resultadoDoComputador);
+
+                    int posicaoAnteriorComputador = posicaoComputador;
+                    posicaoComputador += resultadoDoComputador;
+
+                    posicaoComputador = VerificarEventosEspeciais(ref posicaoComputador, resultadoDoComputador, "Computador");
+
+                    if (posicaoComputador >= limiteLinhaChegada)
+                    {
+                        Console.WriteLine("Que pena! O computador alcançou a linha de chegada!");
+                        Console.ReadLine();
+                        jogoEstaEmAndamento = false;
+                        continue;
+                    }
+                    else
+                        Console.WriteLine($"O computador estava na posição: {posicaoAnteriorComputador} e foi para a posição: {posicaoComputador} de {limiteLinhaChegada}");
 
                     Console.Write("Pressione ENTER para continuar");
                     Console.ReadLine();
@@ -49,15 +82,20 @@
             }
         }
 
-        static void ExibirCabecalho()
+        static void ExibirCabecalho(string nomeJogador)
         {
             Console.Clear();
             Console.WriteLine("-----------------------------------------------");
             Console.WriteLine("Jogo dos Dados");
             Console.WriteLine("-----------------------------------------------");
+            Console.WriteLine($"Turno do jodador(a): {nomeJogador}");
+            Console.WriteLine("-----------------------------------------------");
 
-            Console.Write("Precione ENTER para lançar o dado...");
-            Console.ReadLine();
+            if (nomeJogador != "Computador")
+            {
+                Console.Write("Precione ENTER para lançar o dado...");
+                Console.ReadLine();
+            }
         }
 
         static int LacarDados()
@@ -82,6 +120,41 @@
             string opcaoContinuar = Console.ReadLine()!.ToUpper();
 
             return opcaoContinuar;
+        }
+
+        static int VerificarEventosEspeciais(ref int posicao, int resultado, string jogador)
+        {
+            // Avanço extra
+            if (posicao == 5 || posicao == 10 || posicao == 15)
+            {
+                Console.WriteLine($"{jogador} avançou 3 casas!");
+                posicao += 3;
+            }
+
+            // Recuo
+            if (posicao == 7 || posicao == 13 || posicao == 20)
+            {
+                Console.WriteLine($"{jogador} recuou 2 casas!");
+                posicao -= 2;
+            }
+
+            // Rodada extra
+            if (resultado == 6)
+            {
+                Console.WriteLine($"O {jogador} tirou 6! Ganha uma rodada extra!");
+
+                Console.Write("Pressione ENTER para lançar o dado novamente...");
+                Console.ReadLine();
+
+                int novoResultado = LacarDados();
+                ExibirResultadoSorteio(novoResultado);
+
+                posicao += novoResultado;
+
+                posicao = VerificarEventosEspeciais(ref posicao, novoResultado, jogador);
+            }
+
+            return posicao;
         }
     }
 }
