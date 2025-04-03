@@ -34,3 +34,4 @@ O objetivo do jogo é ser o primeiro a alcançar a linha de chegada (definida como
 1. Clone este repositório em sua máquina local:
    ```bash
    git clone https://github.com/joicencm/JogoDeDados.git
+1
