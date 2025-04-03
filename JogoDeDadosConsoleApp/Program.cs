@@ -3,14 +3,6 @@
 
     internal class Program
     {
-        /*
-        Desafio Eventos Especiais:
-            Para tornar o jogo mais interessante, algumas posições na pista podem ter eventos especiais:
-            ○ Avanço extra: Se o competidor parar em uma posição específica (ex.: 5, 10, 15), ele avança +3
-            casas.
-            ○ Recuo: Se o competidor parar em outra posição específica (ex.: 7, 13, 20), ele recua -2 casas.
-            ○ Rodada extra: Se o competidor tirar 6 no dado, ele ganha uma rodada extra.
-         */
         static void Main(string[] args)
         {
             const int limiteLinhaChegada = 30;
@@ -32,6 +24,7 @@
                     ExibirResultadoSorteio(resultado);
 
                     int posicaoAnteriorUsuario = posicaoUsuario;
+
                     posicaoUsuario += resultado;
 
                     posicaoUsuario = VerificarEventosEspeciais(ref posicaoUsuario, resultado, "Usuario");
@@ -40,6 +33,7 @@
                     {
                         Console.WriteLine("Parabéns, você alcançou a linha de chegada!");
                         Console.ReadLine();
+
                         jogoEstaEmAndamento = false;
                         continue;
                     }
@@ -57,6 +51,7 @@
                     ExibirResultadoSorteio(resultadoDoComputador);
 
                     int posicaoAnteriorComputador = posicaoComputador;
+
                     posicaoComputador += resultadoDoComputador;
 
                     posicaoComputador = VerificarEventosEspeciais(ref posicaoComputador, resultadoDoComputador, "Computador");
@@ -65,6 +60,7 @@
                     {
                         Console.WriteLine("Que pena! O computador alcançou a linha de chegada!");
                         Console.ReadLine();
+
                         jogoEstaEmAndamento = false;
                         continue;
                     }
